@@ -29,12 +29,11 @@ class almostWordleGame:
                 if self.debug:
                     print(sample_word)
 
-                # TODO Need to filter out words that have more than 2 sets of repeating letters
-                #   and words with 3 or more of the same letter?
                 for i in sample_word:
-
                     if sample_word.count(i) > 2:
+                        if self.debug: print("skipped", sample_word)
                         continue
+
                 return sample_word
 
     def run(self):

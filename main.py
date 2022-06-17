@@ -17,7 +17,15 @@ def valid_guess_input(value):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="A command line version of wordle")
+    parser = argparse.ArgumentParser(description="A command line version of wordle.  Rules for the game are at the "
+                                                 "bottom.",
+                                     epilog="Rules:  Guess the secret five letter word.  Letters in your guess will be "
+                                            "colored depending on how close they are to the secret word.  "
+                                            "Green means the letter appears in the secret word at that location, "
+                                            "yellow means the letter is appears in the word, but not the location it "
+                                            "is currently in, "
+                                            "and grey means that letter does not appear in the secret word.  "
+                                            "Some letters may appear in multiple locations in the word.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-l", "--limited", help="play notQuiteCommandLineWordle with a limited number of guesses,"
                                                " when neither -l or -u is specified, -l is treated as default",
