@@ -5,14 +5,27 @@
 from english_words import english_words_lower_alpha_set
 from time import sleep
 from termcolor import cprint
+from wordList import gen_word_list
 
 
 class almostWordleGame:
-    def __init__(self, limit: bool, limit_value: int = 7, debug: bool = False):
+    def __init__(self, limit: bool, limit_value: int = 7, debug: bool = False, ics:bool = False):
         self.limit = limit
         self.limit_value = limit_value
         self.word_len = 5
         self.debug = debug
+        self.ics = ics
+        self.ics_set = set()
+        if self.ics:
+            if not self._ics_word_gen():
+                gen_word_list()
+                if not self._ics_word_gen():
+                    self.ics = False
+                    print("UNABLE TO USE ICS WORD SET, USING DEFAULT WORD SET")
+                elif self.debug:
+                    print("Using ICS word list")
+            elif self.debug:
+                print("Using ICS word list")
 
         self.word = self._select_word()
         self.history = []
@@ -21,10 +34,24 @@ class almostWordleGame:
         if self.debug:
             print(self.limit, self.limit_value)
 
+    def _ics_word_gen(self) -> bool:
+        try:
+            with open("words.txt", "r") as file:
+                while word := file.readline().rstrip():
+                    self.ics_set.add(word)
+            return True
+        except FileNotFoundError:
+            return False
+
     def _select_word(self):
         while True:
-            sample_word = english_words_lower_alpha_set.pop()
-            english_words_lower_alpha_set.add(sample_word)
+            if self.ics:
+                sample_word = self.ics_set.pop()
+                self.ics_set.add(almostWordleGame)
+            else:
+                sample_word = english_words_lower_alpha_set.pop()
+                english_words_lower_alpha_set.add(sample_word)
+
             if len(sample_word) == self.word_len:
                 if self.debug:
                     print(sample_word)
@@ -63,7 +90,11 @@ class almostWordleGame:
                 self._print_error("Enter a " + str(self.word_len) + " letter word")
                 self._print_state()
                 guess = self._take_input()
-            elif guess not in english_words_lower_alpha_set:
+            elif self.ics is False and guess not in english_words_lower_alpha_set:
+                self._print_error("Not a recognized word")
+                self._print_state()
+                guess = self._take_input()
+            elif self.ics is True and guess not in self.ics_set:
                 self._print_error("Not a recognized word")
                 self._print_state()
                 guess = self._take_input()

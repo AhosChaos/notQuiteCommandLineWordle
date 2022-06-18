@@ -38,12 +38,16 @@ if __name__ == '__main__':
                              " default number of guesses is 7")
     parser.add_argument("-d", "--debug", action="store_true", default=False,
                         help="Debug mode, will print out the solution and other values, default value is False")
+    parser.add_argument("-i", "--ics", action="store_true", default=False,
+                        help="Use the Prof Kay's UCI ICS word list instead of a Python library dictionary.  If the "
+                             "word list is not available, a message will be printed and the default Python library "
+                             "dictionary will be used, default value is False")
 
     args = parser.parse_args()
 
     if args.unlimited:
-        gameBase.almostWordleGame(False, debug=args.debug).run()
+        gameBase.almostWordleGame(False, debug=args.debug, ics=args.ics).run()
     else:
-        gameBase.almostWordleGame(True, args.guesses, args.debug).run()
+        gameBase.almostWordleGame(True, args.guesses, debug=args.debug, ics=args.ics).run()
 
 
